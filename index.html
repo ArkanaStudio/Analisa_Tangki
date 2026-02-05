@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Data & Pengurangan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            opacity: 0.95;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            width: 100%;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .card-header h3 {
+            color: #333;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .hasil {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .hasil:empty {
+            display: none;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .header {
+                margin-bottom: 25px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .grid-container {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 18px;
+            }
+
+            input[type="number"],
+            button {
+                padding: 10px 12px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Data Ketinggian Tangki 1 & 2</h1>
+        <p>Analisis data volume ketinggian tangki 1 & 2</p>
+    </div>
+
+    <div class="grid-container">
+        <!-- Card 1: Cari Data Kolom A -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Data Tangki 1</h3>
+            </div>
+            <div class="input-group">
+                <label>Ketinggian Sounding T1</label>
+                <input type="number" id="barisInput" placeholder="Contoh: 3005 untuk 300,5">
+            </div>
+            <button onclick="ambilData()">Tampilkan Data</button>
+            <div class="hasil" id="hasil"></div>
+        </div>
+
+        <!-- Card 2: Pengurangan Kolom A -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Hasil Stok Akhir dikurang Stok Awal T1</h3>
+            </div>
+            <div class="input-group">
+                <label>Sounding Stok awal T1</label>
+                <input type="number" id="angka1" placeholder="Contoh: 2000">
+            </div>
+            <div class="input-group">
+                <label>Sounding Stok Akhir T1</label>
+                <input type="number" id="angka2" placeholder="Contoh: 3000">
+            </div>
+            <button onclick="hitungPengurangan()">Hitung Gain/Losses</button>
+            <div class="hasil" id="nilai1"></div>
+            <div class="hasil" id="nilai2"></div>
+            <div class="hasil" id="hasilJumlah"></div>
+            <div class="hasil" id="gainLoss"></div>
+        </div>
+
+        <!-- Card 3: Cari Data Kolom B -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Data Tangki 2</h3>
+            </div>
+            <div class="input-group">
+                <label>Ketinggian Sounding T2</label>
+                <input type="number" id="barisInputB" placeholder="Contoh: 3005 untuk 300,5">
+            </div>
+            <button onclick="ambilDataB()">Tampilkan Data</button>
+            <div class="hasil" id="hasilB"></div>
+        </div>
+
+        <!-- Card 4: Pengurangan Kolom B -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Hasil Stok Akhir Dikurang Stok Awal T2</h3>
+            </div>
+            <div class="input-group">
+                <label>Sounding Stok Awal T2</label>
+                <input type="number" id="angka1B" placeholder="Contoh: 2000">
+            </div>
+            <div class="input-group">
+                <label>Sounding Stok Akhir T2</label>
+                <input type="number" id="angka2B" placeholder="Contoh: 3000">
+            </div>
+            <button onclick="hitungPenguranganB()">Hitung Gain/Losses</button>
+            <div class="hasil" id="nilai1B"></div>
+            <div class="hasil" id="nilai2B"></div>
+            <div class="hasil" id="hasilJumlahB"></div>
+            <div class="hasil" id="gainLossB"></div>
+        </div>
+    </div>
+
+    <script>
+        const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQK9bHNNtzUq83iAM5nqSrx6P0D8Of4Y-peMbgfVJblhXqMaVHMARAd0UubzQqZp87UY7fvefI_HgSP/pub?output=csv";
+        let dataSpreadsheet = [];
+
+        fetch(sheetUrl)
+            .then(response => response.text())
+            .then(csvText => {
+                dataSpreadsheet = csvText.trim().split("\n").map(row => {
+                    const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+                    return cols.map(col => col.replace(/^"|"$/g, '').trim());
+                });
+                console.log("Data siap digunakan:", dataSpreadsheet.length, "baris");
+                console.log("Contoh baris pertama:", dataSpreadsheet[0]);
+                console.log("Jumlah kolom:", dataSpreadsheet[0] ? dataSpreadsheet[0].length : 0);
+            })
+            .catch(err => console.error("Gagal memuat data:", err));
+
+        function toNumber(value) {
+            if (!value) return NaN;
+            let clean = value.toString().trim();
+
+            // Hapus semua karakter selain angka, titik, koma, dan minus
+            clean = clean.replace(/[^\d.,-]/g, "");
+
+            // Deteksi format: jika ada titik DAN koma, anggap titik = ribuan, koma = desimal (format ID)
+            if (clean.includes('.') && clean.includes(',')) {
+                // Format Indonesia: 1.234,56
+                clean = clean.replace(/\./g, ''); // Hapus titik (pemisah ribuan)
+                clean = clean.replace(/,/g, '.'); // Ganti koma jadi titik (desimal)
+            } else if (clean.includes(',')) {
+                // Hanya ada koma, bisa jadi desimal (12,5) atau ribuan
+                const parts = clean.split(',');
+                if (parts.length === 2 && parts[1].length <= 2) {
+                    // Kemungkinan desimal: 12,5 atau 1234,56
+                    clean = clean.replace(/,/g, '.');
+                } else {
+                    // Kemungkinan pemisah ribuan
+                    clean = clean.replace(/,/g, '');
+                }
+            } else if (clean.includes('.')) {
+                // Hanya ada titik, bisa jadi ribuan (1.234) atau desimal (12.5)
+                const parts = clean.split('.');
+                if (parts.length === 2 && parts[1].length <= 2) {
+                    // Kemungkinan desimal: 12.5
+                    // Biarkan titik sebagai desimal
+                } else {
+                    // Kemungkinan pemisah ribuan: 1.234 atau 1.234.567
+                    clean = clean.replace(/\./g, '');
+                }
+            }
+
+            const number = parseFloat(clean);
+            return number;
+        }
+
+        function formatNumber(num) {
+            // Bulatkan ke 1 desimal
+            const rounded = Math.round(num * 10) / 10;
+
+            // Cek apakah hasil adalah bilangan bulat
+            if (rounded % 1 === 0) {
+                // Jika bulat, format dengan pemisah ribuan tanpa desimal
+                return Math.round(rounded).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            } else {
+                // Jika ada desimal, tampilkan dengan 1 angka di belakang koma
+                const parts = rounded.toFixed(1).split('.');
+                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                const decimalPart = parts[1];
+                return `${integerPart},${decimalPart}`;
+            }
+        }
+
+        function ambilData() {
+            const baris = parseInt(document.getElementById("barisInput").value);
+            const hasilDiv = document.getElementById("hasil");
+
+            if (!baris || baris <= 0 || baris > dataSpreadsheet.length) {
+                hasilDiv.textContent = "⚠️ Nomor baris tidak valid!";
+                return;
+            }
+
+            const raw = dataSpreadsheet[baris - 1][0] || "";
+            hasilDiv.innerHTML = `Volume Tangki 1 : <b>${raw}</b>`;
+        }
+
+        function hitungPengurangan() {
+            const b1 = parseInt(document.getElementById("angka1").value);
+            const b2 = parseInt(document.getElementById("angka2").value);
+            const n1Div = document.getElementById("nilai1");
+            const n2Div = document.getElementById("nilai2");
+            const hasilDiv = document.getElementById("hasilJumlah");
+            const gainLossDiv = document.getElementById("gainLoss");
+
+            if (!b1 || !b2 || b1 <= 0 || b2 <= 0 || b1 > dataSpreadsheet.length || b2 > dataSpreadsheet.length) {
+                hasilDiv.textContent = "⚠️ Nomor baris tidak valid!";
+                n1Div.textContent = "";
+                n2Div.textContent = "";
+                gainLossDiv.textContent = "";
+                return;
+            }
+
+            const raw1 = dataSpreadsheet[b1 - 1][0] || "";
+            const raw2 = dataSpreadsheet[b2 - 1][0] || "";
+
+            const nilai1 = toNumber(raw1);
+            const nilai2 = toNumber(raw2);
+
+            if (isNaN(nilai1) || isNaN(nilai2)) {
+                hasilDiv.innerHTML = "⚠️ Salah satu data tidak bisa dikonversi menjadi angka.";
+                n1Div.innerHTML = `📄 Baris ${b1}: <b>${raw1}</b> → ${isNaN(nilai1) ? '❌ Tidak valid' : '✓'}`;
+                n2Div.innerHTML = `📄 Baris ${b2}: <b>${raw2}</b> → ${isNaN(nilai2) ? '❌ Tidak valid' : '✓'}`;
+                gainLossDiv.textContent = "";
+                return;
+            }
+
+            n1Div.innerHTML = `Volume Stok Awal : <b>${raw1}</b>`;
+            n2Div.innerHTML = `Volume Stok Akhir : <b>${raw2}</b>`;
+
+            const hasil = nilai2 - nilai1;
+            const hasilFormatted = formatNumber(hasil);
+
+            hasilDiv.innerHTML = `Hasil Pengurangan Stok Akhir - Stok Awal : <b>${hasilFormatted}</b>`;
+
+            // Hitung Gain/Loss dengan 16000
+            const selisih16000 = hasil - 16000;
+            const selisihFormatted = formatNumber(Math.abs(selisih16000));
+
+            if (selisih16000 > 0) {
+                gainLossDiv.innerHTML = `📈 <b style="color: #22c55e;">GAIN: +${selisihFormatted}</b>`;
+            } else if (selisih16000 < 0) {
+                gainLossDiv.innerHTML = `📉 <b style="color: #ef4444;">LOSS: -${selisihFormatted}</b>`;
+            } else {
+                gainLossDiv.innerHTML = `➖ <b style="color: #6b7280;">BALANCE: 0</b>`;
+            }
+        }
+
+        function ambilDataB() {
+            const baris = parseInt(document.getElementById("barisInputB").value);
+            const hasilDiv = document.getElementById("hasilB");
+
+            if (!baris || baris <= 0 || baris > dataSpreadsheet.length) {
+                hasilDiv.textContent = "⚠️ Nomor baris tidak valid!";
+                return;
+            }
+
+            const row = dataSpreadsheet[baris - 1];
+            const raw = row && row.length > 1 ? row[1] : "";
+
+            if (!raw) {
+                hasilDiv.innerHTML = `⚠️ <b>Kolom B Baris ${baris}:</b> Kosong atau tidak ada<br><small>Debug: Kolom tersedia = ${row ? row.length : 0}</small>`;
+            } else {
+                hasilDiv.innerHTML = `Volume Tangki 2 : <b>${raw}</b>`;
+            }
+        }
+
+        function hitungPenguranganB() {
+            const b1 = parseInt(document.getElementById("angka1B").value);
+            const b2 = parseInt(document.getElementById("angka2B").value);
+            const n1Div = document.getElementById("nilai1B");
+            const n2Div = document.getElementById("nilai2B");
+            const hasilDiv = document.getElementById("hasilJumlahB");
+            const gainLossDiv = document.getElementById("gainLossB");
+
+            if (!b1 || !b2 || b1 <= 0 || b2 <= 0 || b1 > dataSpreadsheet.length || b2 > dataSpreadsheet.length) {
+                hasilDiv.textContent = "⚠️ Nomor baris tidak valid!";
+                n1Div.textContent = "";
+                n2Div.textContent = "";
+                gainLossDiv.textContent = "";
+                return;
+            }
+
+            const row1 = dataSpreadsheet[b1 - 1];
+            const row2 = dataSpreadsheet[b2 - 1];
+
+            const raw1 = row1 && row1.length > 1 ? row1[1] : "";
+            const raw2 = row2 && row2.length > 1 ? row2[1] : "";
+
+            const nilai1 = toNumber(raw1);
+            const nilai2 = toNumber(raw2);
+
+            if (!raw1 || !raw2) {
+                hasilDiv.innerHTML = "⚠️ Kolom B kosong di salah satu atau kedua baris.";
+                n1Div.innerHTML = `📄 Baris ${b1}: ${!raw1 ? '❌ Kosong' : raw1}`;
+                n2Div.innerHTML = `📄 Baris ${b2}: ${!raw2 ? '❌ Kosong' : raw2}`;
+                gainLossDiv.textContent = "";
+                return;
+            }
+
+            if (isNaN(nilai1) || isNaN(nilai2)) {
+                hasilDiv.innerHTML = "⚠️ Salah satu data tidak bisa dikonversi menjadi angka.";
+                n1Div.innerHTML = `📄 Baris ${b1}: <b>${raw1}</b> → ${isNaN(nilai1) ? '❌ Tidak valid' : '✓'}`;
+                n2Div.innerHTML = `📄 Baris ${b2}: <b>${raw2}</b> → ${isNaN(nilai2) ? '❌ Tidak valid' : '✓'}`;
+                gainLossDiv.textContent = "";
+                return;
+            }
+
+            n1Div.innerHTML = `Volume Stok Awal : <b>${raw1}</b>`;
+            n2Div.innerHTML = `Volume Stok Akhir : <b>${raw2}</b>`;
+
+            const hasil = nilai2 - nilai1;
+            const hasilFormatted = formatNumber(hasil);
+
+            hasilDiv.innerHTML = `Hasil Pengurangan Stok Akhir - Stok Awal : <b>${hasilFormatted}</b>`;
+
+            // Hitung Gain/Loss dengan 16000
+            const selisih16000 = hasil - 16000;
+            const selisihFormatted = formatNumber(Math.abs(selisih16000));
+
+            if (selisih16000 > 0) {
+                gainLossDiv.innerHTML = `📈 <b style="color: #22c55e;">GAIN: +${selisihFormatted}</b>`;
+            } else if (selisih16000 < 0) {
+                gainLossDiv.innerHTML = `📉 <b style="color: #ef4444;">LOSS: -${selisihFormatted}</b>`;
+            } else {
+                gainLossDiv.innerHTML = `➖ <b style="color: #6b7280;">BALANCE: 0</b>`;
+            }
+        }
+    </script>
+
+</body>
+
+</html>
